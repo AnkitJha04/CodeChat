@@ -1,138 +1,388 @@
-⚡ CodeChat - Team Edition
-CodeChat is a standalone, privacy-focused RAG (Retrieval-Augmented Generation) tool designed for secure team collaboration. Unlike cloud-based AI editors, CodeChat runs 100% locally using Ollama (Llama 3.1), allowing you to turn your codebase into a queryable "Second Brain" without sending sensitive code to the cloud.
+# CodeChat – Team Edition
 
-📖 Project Genesis & Architecture
-The Problem
-Modern development teams want to leverage AI to understand and navigate large codebases, but existing cloud-based solutions (like GitHub Copilot or ChatGPT) require sending proprietary, sensitive source code to third-party servers. Furthermore, running local AI on every team member's machine is hardware-intensive and creates fragmented knowledge silos.
+> **Private AI Workspace for Engineering Teams**
+> A fully local, collaborative RAG-based platform that lets teams query, understand, and navigate large codebases using local LLMs — without sending proprietary code to the cloud.
 
-The Approach
-The goal was to build a secure, localized Client-Server architecture. By centralizing the heavy lifting (embedding generation and LLM inference) on a single powerful "Host" machine using Ollama and FastAPI, the rest of the team can connect via a lightweight PyQt6 desktop client. This ensures zero data leakage while democratizing access to the codebase's "Second Brain."
+---
 
-Iterations
-Iteration 1 (Core Local RAG): Developed a single-user desktop application capable of indexing a local folder and querying it using Ollama and a custom NumPy vector store.
+## 🚀 Overview
 
-Iteration 2 (Memory & State): Introduced the "Smart Memory" feature, allowing users to save and load compiled vector indices ("Brains") and chat histories to eliminate redundant processing time.
+CodeChat – Team Edition is a privacy-first AI collaboration platform designed for development teams that want the power of AI-assisted code understanding **without sacrificing source-code privacy**.
 
-Iteration 3 (Team Connectivity): Transitioned to a FastAPI backend, enabling secure network connections and real-time collaboration without requiring clients to download the source files.
+Unlike cloud-based coding assistants, CodeChat runs entirely on local infrastructure using **Ollama + Llama 3.1**, enabling teams to transform their repositories into a searchable, queryable **“AI Second Brain.”**
 
-Iteration 4 (Access Control & Voice): Implemented Role-Based Security (Host, Collaborator, Guest) to protect the integrity of the Host's data, and added hands-free Voice Mode.
+The platform follows a **Client–Server architecture**, where a centralized Host machine performs:
 
-Key Design Choices
-100% Local Inference: Opted for Ollama (Llama 3.1) over external APIs to guarantee absolute privacy and zero subscription costs.
+* embedding generation,
+* vector indexing,
+* and LLM inference,
 
-Custom Vector Store over Heavy DBs: Chose a lightweight, custom NumPy implementation for vector embeddings rather than requiring users to set up complex databases like Pinecone or Milvus.
+while lightweight clients connect securely over the network.
 
-Decoupled Architecture: Separated the AI backend (FastAPI) from the frontend GUI (PyQt6). This ensures the client remains fast and responsive, even when the Host is processing heavy embeddings.
+---
 
-Smart Scrolling "Team Stream": Designed the UI to lock the scroll position when reading history, preventing new collaborative messages from interrupting the user's reading flow.
+# ✨ Key Features
 
-Daily Time Commitment
-During active development, this project required an average commitment of [Insert Number, e.g., 2-3 hours] per day, split between backend API structuring, UI/UX design in PyQt, and refining the local RAG prompt engineering.
+## 🔒 100% Local & Private
 
-🚀 Key Features
-👥 Real-Time Collaboration: Instantly share your codebase's knowledge. A Host indexes the code, and Collaborators/Guests can query it remotely without downloading the source files.
+* No cloud APIs
+* No code leakage
+* No subscriptions
+* Fully self-hosted
 
-🔒 100% Local & Private: Powered by Ollama. No API keys, no subscriptions, and no data leaks.
+Powered entirely by:
 
-🧠 Smart Memory: Save and Load "Brains" (vector indices) or full "Sessions" (Brain + Chat History) to resume work anytime.
+* Ollama
+* Local vector embeddings
+* FastAPI backend
 
-🛡️ Role-Based Security:
+---
 
-Host: Full control (Index/Wipe/Save/Load).
+## 👥 Collaborative Team Workspace
 
-Collaborator: Can append new files to the knowledge base but cannot overwrite/wipe the Host's data.
+Multiple users can connect to a shared AI knowledge base without downloading the original source code.
 
-Guest: Read-only access to query the knowledge base.
+### Roles:
 
-🎤 Voice Mode: Hands-free coding assistance with speech-to-text.
+| Role         | Permissions      |
+| ------------ | ---------------- |
+| Host         | Full control     |
+| Collaborator | Can append files |
+| Guest        | Read-only access |
 
-📜 Smart Scrolling: The "Team Stream" locks your scroll position when reading history, so new messages don't interrupt you.
+---
 
-🛠️ Tech Stack
-GUI: Python (PyQt6)
+## 🧠 Smart Memory System
 
-Server: FastAPI, Uvicorn
+Save and restore:
 
-AI Backend: Ollama (Llama 3.1)
+* vector indices (“Brains”)
+* chat sessions
+* project states
 
-Vector Store: Local vector embeddings (custom NumPy implementation)
+Avoid re-indexing large repositories repeatedly.
 
-Audio/Speech: SpeechRecognition, PyAudio
+---
 
-📦 Installation
-Prerequisites
-Python 3.10+ installed.
+## ⚡ Query Your Entire Codebase
 
-Ollama installed and running. Download Ollama
+Ask natural-language questions like:
 
-Setup
-Clone this repository:
+```bash
+Where is JWT authentication implemented?
+```
 
-Bash
-git clone https://github.com/yourusername/codechat-team.git 
+```bash
+Explain the database architecture.
+```
+
+```bash
+Which files handle websocket communication?
+```
+
+```bash
+How does the FastAPI backend communicate with the client?
+```
+
+---
+
+## 🎤 Voice Mode
+
+Hands-free AI interaction using:
+
+* SpeechRecognition
+* PyAudio
+
+---
+
+## 📜 Smart Team Stream
+
+Collaborative chat system with intelligent scrolling behavior:
+
+* preserves reading position,
+* prevents interruptions from new messages.
+
+---
+
+# 🏗️ Architecture
+
+```text
+                ┌────────────────────┐
+                │    Client Apps     │
+                │  (PyQt6 Desktop)   │
+                └─────────┬──────────┘
+                          │
+                          │ HTTP/WebSocket
+                          ▼
+                ┌────────────────────┐
+                │   FastAPI Server   │
+                │  Central AI Brain  │
+                └─────────┬──────────┘
+                          │
+         ┌────────────────┼────────────────┐
+         ▼                ▼                ▼
+ ┌────────────┐   ┌──────────────┐   ┌─────────────┐
+ │  Ollama    │   │ Vector Store │   │ Chat Memory │
+ │ Llama 3.1  │   │   (NumPy)    │   │ Sessions    │
+ └────────────┘   └──────────────┘   └─────────────┘
+```
+
+---
+
+# 🛠️ Tech Stack
+
+| Component    | Technology                  |
+| ------------ | --------------------------- |
+| GUI          | PyQt6                       |
+| Backend      | FastAPI + Uvicorn           |
+| AI Runtime   | Ollama                      |
+| LLM          | Llama 3.1                   |
+| Vector Store | Custom NumPy embeddings     |
+| Networking   | Requests / HTTP             |
+| Speech       | SpeechRecognition + PyAudio |
+
+---
+
+# 📦 Installation
+
+## Prerequisites
+
+* Python 3.10+
+* Ollama installed and running
+
+Download Ollama:
+[https://ollama.com](https://ollama.com)
+
+---
+
+## Clone Repository
+
+```bash
+git clone https://github.com/yourusername/codechat-team.git
 cd codechat-team
-Install required Python libraries:
+```
 
-Bash
+---
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or manually:
+
+```bash
 pip install PyQt6 ollama numpy requests fastapi uvicorn speechrecognition markdown pyaudio
-(Note: On Windows, if pyaudio fails, you may need to install it via a .whl file or use pipwin install pyaudio.)
+```
 
-Pull the Llama 3.1 model:
+---
 
-Bash
+## Pull Llama 3.1
+
+```bash
 ollama pull llama3.1
-📖 How to Use
-Option A: Single User (Offline Mode)
-Run the application:
+```
 
-Bash
+---
+
+# 🚀 Running CodeChat
+
+# Option A — Offline Single User Mode
+
+Start the application:
+
+```bash
 python main.py
-Click 📂 New Project to select a folder containing your code.
+```
 
-Start chatting with your codebase in the "My Session" tab.
+### Features:
 
-Use 💾 Save Session to back up your progress.
+* Local repository indexing
+* AI code querying
+* Session memory
+* Offline operation
 
-Option B: Team Mode (Host & Clients)
-1. Start the Host (Server)
-The person with the powerful GPU/RAM should act as the Host.
+---
 
-Open a terminal and run the server:
+# Option B — Team Collaboration Mode
 
-Bash
+## Start Host Server
+
+```bash
 python server.py
-Open another terminal and run the client:
+```
 
-Bash
+---
+
+## Launch Client
+
+```bash
 python main.py
-In the client app, click 🔄 Sync Server.
+```
 
-Click 📧 Invite to generate tokens for your team:
+---
 
-Guest Token: For read-only users.
+## Connect Team Members
 
-Collaborator Token: For users who can add code.
+1. Click **🌐 Join Team**
+2. Enter:
 
-2. Join as a Teammate
+   * Host URL
+   * Access Token
+3. Start querying instantly
 
-Run the client on your machine:
+---
 
-Bash
-python main.py
-Click 🌐 Join Team.
+# 📂 Project Structure
 
-Enter the Host's URL (e.g., http://192.168.1.5:8000 or a Ngrok URL) and your Token.
+```text
+codechat-team/
+│
+├── main.py          # PyQt6 frontend client
+├── server.py        # FastAPI backend server
+├── backend.py       # AI + vector logic
+├── styles.py        # UI styling
+├── requirements.txt
+└── README.md
+```
 
-Start querying the codebase immediately!
+---
 
-📂 File Structure
-main.py: The frontend GUI application (PyQt6).
+# 🎯 Why CodeChat Exists
 
-server.py: The FastAPI server that manages the "Central Brain" and user sessions.
+Modern engineering teams increasingly rely on AI to:
 
-backend.py: Handles AI logic (Ollama), embedding generation, and vector storage.
+* understand large codebases,
+* accelerate onboarding,
+* debug systems,
+* and improve productivity.
 
-styles.py: CSS stylesheets for the dark mode UI.
+But existing cloud-based AI tools require uploading proprietary code to third-party servers.
 
-🤝 Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+CodeChat solves this by enabling:
+✅ fully local inference
+✅ collaborative querying
+✅ secure code understanding
+✅ centralized AI infrastructure
+
+without exposing sensitive source code.
+
+---
+
+# 🔥 Core Design Principles
+
+## Local-First AI
+
+All inference happens locally using Ollama.
+
+---
+
+## Lightweight Infrastructure
+
+Uses a custom NumPy vector system instead of requiring:
+
+* Pinecone
+* Milvus
+* external vector databases
+
+---
+
+## Decoupled Architecture
+
+Frontend and backend are separated for:
+
+* scalability
+* responsiveness
+* modularity
+
+---
+
+## Privacy By Design
+
+No external APIs.
+No telemetry.
+No cloud dependency.
+
+---
+
+# 🧪 Current Status
+
+> ⚠️ **Developer Preview / Beta Release**
+
+CodeChat is currently under active development.
+
+Planned improvements include:
+* advanced repo indexing
+* semantic memory optimization
+* multi-model support
+* plugin ecosystem
+* enterprise authentication
+* containerized deployment
+* distributed inference
+
+# 🤝 Contributing
+
+Pull requests are welcome.
+
+For major changes:
+
+1. Open an issue
+2. Discuss proposed changes
+3. Submit PR
+
+---
+
+# 📌 Roadmap
+
+## v0.1 Beta
+* Local RAG
+* Team collaboration
+* Smart memory
+* Voice mode
+---
+## v0.2
+* Multi-repository support
+* Advanced chunking
+* Semantic search optimization
+* Better onboarding
+---
+## v0.3
+* Web dashboard
+* Docker deployment
+* Team analytics
+* Plugin architecture
+---
+
+# 🌟 Vision
+CodeChat aims to become:
+> **The private AI operating system for engineering teams.**
+A fully local collaborative intelligence layer for:
+
+* software teams,
+* robotics companies,
+* AI startups,
+* research labs,
+* and secure engineering environments.
+
+# ⭐ Support The Project
+If you found this interesting:
+
+* Star the repository
+* Share feedback
+* Open issues
+* Contribute improvements
+
+---
+
+# 👨‍💻 Author
+
+**Ankit Jha**
+AI • Embedded Systems • Robotics • Computer Vision
+
+Building intelligent systems at the intersection of:
+
+* AI
+* automation
+* robotics
+* and real-world engineering.
