@@ -22,16 +22,13 @@ while lightweight clients connect securely over the network.
 ---
 
 # ✨ Key Features
-
 ## 🔒 100% Local & Private
-
 * No cloud APIs
 * No code leakage
 * No subscriptions
 * Fully self-hosted
 
 Powered entirely by:
-
 * Ollama
 * Local vector embeddings
 * FastAPI backend
@@ -106,7 +103,6 @@ Collaborative chat system with intelligent scrolling behavior:
 
 # 🏗️ Architecture
 
-```text
                 ┌────────────────────┐
                 │    Client Apps     │
                 │  (PyQt6 Desktop)   │
@@ -125,9 +121,6 @@ Collaborative chat system with intelligent scrolling behavior:
  │  Ollama    │   │ Vector Store │   │ Chat Memory │
  │ Llama 3.1  │   │   (NumPy)    │   │ Sessions    │
  └────────────┘   └──────────────┘   └─────────────┘
-```
-
----
 
 # 🛠️ Tech Stack
 
@@ -141,10 +134,8 @@ Collaborative chat system with intelligent scrolling behavior:
 | Networking   | Requests / HTTP             |
 | Speech       | SpeechRecognition + PyAudio |
 
----
 
 # 📦 Installation
-
 ## Prerequisites
 
 * Python 3.10+
@@ -156,33 +147,24 @@ Download Ollama:
 ---
 
 ## Clone Repository
-
-```bash
+bash
 git clone https://github.com/yourusername/codechat-team.git
 cd codechat-team
-```
 
 ---
 
 ## Install Dependencies
-
-```bash
+bash
 pip install -r requirements.txt
-```
-
 Or manually:
-
-```bash
+bash
 pip install PyQt6 ollama numpy requests fastapi uvicorn speechrecognition markdown pyaudio
-```
 
 ---
 
 ## Pull Llama 3.1
-
-```bash
+bash
 ollama pull llama3.1
-```
 
 ---
 
@@ -375,13 +357,10 @@ If you found this interesting:
 
 ---
 
-# 👨‍💻 Author
+# 👨‍💻 Author :- Ankit Jha
 
-**Ankit Jha**
 AI • Embedded Systems • Robotics • Computer Vision
-
 Building intelligent systems at the intersection of:
-
 * AI
 * automation
 * robotics
